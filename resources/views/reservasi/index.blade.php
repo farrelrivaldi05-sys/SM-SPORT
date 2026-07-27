@@ -73,13 +73,13 @@
                                             Rp {{ number_format($item->total_harga, 0, ',', '.') }}
                                         </td>
 
-                                        <!-- 🟢 MENAMPILKAN JAM WAKTU ORDER PEMESAN DENGAN WITA (SESUAI LAPTOP) -->
+                                        <!-- 🟢 MENAMPILKAN JAM WAKTU ORDER PEMESAN DENGAN WIB -->
                                         <td class="px-5 py-4 font-mono text-xs whitespace-nowrap">
                                             <div class="text-gray-300 font-bold">
-                                                ⏰ {{ \Carbon\Carbon::parse($item->created_at)->timezone('Asia/Makassar')->format('H:i:s') }} WITA
+                                                ⏰ {{ \Carbon\Carbon::parse($item->created_at)->timezone('Asia/Jakarta')->format('H:i:s') }} WIB
                                             </div>
                                             <div class="text-gray-500 text-[10px]">
-                                                📅 {{ \Carbon\Carbon::parse($item->created_at)->timezone('Asia/Makassar')->format('d/m/Y') }}
+                                                📅 {{ \Carbon\Carbon::parse($item->created_at)->timezone('Asia/Jakarta')->format('d/m/Y') }}
                                             </div>
                                         </td>
 
@@ -103,13 +103,12 @@
                                         <!-- TOMBOL AKSI & KONTROL ADMIN -->
                                         <td class="px-5 py-4 text-right whitespace-nowrap">
                                             <div class="flex items-center justify-end space-x-2">
-                                                @if($item->status !== 'cancelled')
-                                                    <a href="{{ route('reservasi.nota', $item->id) }}" 
-                                                       target="_blank"
-                                                       class="bg-gray-800 hover:bg-gray-700 text-[#E5E7EB] hover:text-[#22C55E] border border-gray-700 hover:border-[#22C55E]/50 text-xs font-bold py-1.5 px-3 rounded-lg transition-all duration-200">
-                                                        🖨️ Nota
-                                                    </a>
-                                                @endif
+                                                <!-- TOMBOL NOTA (BERLAKU UNTUK SEMUA STATUS SEPERTI APPROVED & CANCELLED) -->
+                                                <a href="{{ route('reservasi.nota', $item->id) }}" 
+                                                   target="_blank"
+                                                   class="bg-gray-800 hover:bg-gray-700 text-[#E5E7EB] hover:text-[#22C55E] border border-gray-700 hover:border-[#22C55E]/50 text-xs font-bold py-1.5 px-3 rounded-lg transition-all duration-200">
+                                                    🖨️ Nota
+                                                </a>
 
                                                 <!-- BISA DIUBAH ADMIN KAPAN SAJA -->
                                                 @if(Auth::user()->role === 'admin')

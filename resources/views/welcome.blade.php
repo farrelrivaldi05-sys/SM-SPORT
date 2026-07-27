@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
         <!-- Favicon Tab Browser -->
-<link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
+        <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>SM Sport Center - Sewa Lapangan Olahraga Premium</title>
@@ -67,9 +67,10 @@
                     <span class="text-xs font-extrabold uppercase tracking-widest text-[#22C55E]">Premium Sport Venue</span>
                 </div>
 
-                <!-- Main Heading -->
-                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black text-white uppercase tracking-tight leading-none mb-6">
-                    MAXIMIZE YOUR <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#22C55E] to-emerald-400">PERFORMANCE</span>
+                <!-- Main Heading (Diubah Sesuai Permintaan) -->
+                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white uppercase tracking-tight leading-tight mb-6">
+                    Mau Olahraga Tanpa Antre,<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#22C55E] to-emerald-400">Sewa Lapangan Mudah!</span>
                 </h1>
 
                 <p class="max-w-2xl mx-auto text-sm sm:text-base text-gray-400 font-medium mb-10 leading-relaxed">
