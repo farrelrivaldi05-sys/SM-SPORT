@@ -17,24 +17,62 @@
         </div>
     </x-slot>
 
-    <!-- WRAPPER ALPINE JS STATE UNTUK PENANGANAN LOGIKA DYNAMIC TIME SELECT -->
+    <!-- WRAPPER ALPINE JS STATE -->
     <div class="py-8" x-data="{ 
+        tanggal: '{{ old('tanggal', date('Y-m-d')) }}',
         jamMulai: '{{ old('jam_mulai', '') }}',
         jamSelesai: '{{ old('jam_selesai', '') }}',
         jamSelesaiOptions: [],
+        listJamMulai: [
+            '08:00', '08:30', '09:00', '09:30', '10:00', '10:30',
+            '11:00', '11:30', '12:00', '12:30', '13:00', '13:30',
+            '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
+            '17:00', '17:30', '18:00', '18:30', '19:00', '19:30',
+            '20:00', '20:30', '21:00'
+        ],
 
+        // Cek apakah opsi jam tertentu sudah lewat (berdasarkan waktu laptop)
+        isJamPast(timeStr) {
+            const sekarang = new Date();
+            const tahun = sekarang.getFullYear();
+            const bulan = String(sekarang.getMonth() + 1).padStart(2, '0');
+            const tgl = String(sekarang.getDate()).padStart(2, '0');
+            const tanggalHariIni = `${tahun}-${bulan}-${tgl}`;
+
+            // Jika pilih tanggal besok/lusa, maka tidak ada jam yang terlewati
+            if (this.tanggal !== tanggalHariIni) return false;
+
+            const [jamOpt, menitOpt] = timeStr.split(':').map(Number);
+            const jamNow = sekarang.getHours();
+            const menitNow = sekarang.getMinutes();
+
+            if (jamOpt < jamNow) return true;
+            if (jamOpt === jamNow && menitOpt <= menitNow) return true;
+
+            return false;
+        },
+
+        // Update jam selesai berdasarkan jam mulai yang dipilih
         updateJamSelesaiOptions() {
             this.jamSelesai = '';
             this.jamSelesaiOptions = [];
             if (!this.jamMulai) return;
 
             let [hour, minute] = this.jamMulai.split(':').map(Number);
-            let startHour = hour + 1; // Minimal 1 jam bermain
+            let startHour = hour + 1;
 
             for (let h = startHour; h <= 22; h++) {
                 let formattedHour = h.toString().padStart(2, '0');
                 let formattedMinute = minute.toString().padStart(2, '0');
                 this.jamSelesaiOptions.push(`${formattedHour}:${formattedMinute}`);
+            }
+        },
+
+        // Reset jam mulai jika jam yang dipilih ternyata terlewati saat ganti tanggal
+        onTanggalChange() {
+            if (this.jamMulai && this.isJamPast(this.jamMulai)) {
+                this.jamMulai = '';
+                this.updateJamSelesaiOptions();
             }
         }
     }" x-init="if (jamMulai) updateJamSelesaiOptions()">
@@ -96,7 +134,7 @@
                         <label for="tanggal" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-2">
                             Tanggal Main
                         </label>
-                        <input type="date" id="tanggal" name="tanggal" min="{{ date('Y-m-d') }}" value="{{ old('tanggal', date('Y-m-d')) }}" required
+                        <input type="date" id="tanggal" name="tanggal" min="{{ date('Y-m-d') }}" x-model="tanggal" @change="onTanggalChange()" required
                                class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white text-xs focus:border-[#22C55E] focus:ring-1 focus:ring-[#22C55E] transition [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:invert cursor-pointer">
                     </div>
 
@@ -111,37 +149,17 @@
                             <select id="jam_mulai" name="jam_mulai" x-model="jamMulai" @change="updateJamSelesaiOptions()" required
                                     class="w-full bg-black/60 border border-gray-800 rounded-xl px-4 py-3 text-white text-xs focus:border-[#22C55E] focus:ring-1 focus:ring-[#22C55E] transition font-mono cursor-pointer">
                                 <option value="" disabled selected>-- Jam Mulai --</option>
-                                <option value="08:00" class="bg-gray-900">08:00 WIB</option>
-                                <option value="08:30" class="bg-gray-900">08:30 WIB</option>
-                                <option value="09:00" class="bg-gray-900">09:00 WIB</option>
-                                <option value="09:30" class="bg-gray-900">09:30 WIB</option>
-                                <option value="10:00" class="bg-gray-900">10:00 WIB</option>
-                                <option value="10:30" class="bg-gray-900">10:30 WIB</option>
-                                <option value="11:00" class="bg-gray-900">11:00 WIB</option>
-                                <option value="11:30" class="bg-gray-900">11:30 WIB</option>
-                                <option value="12:00" class="bg-gray-900">12:00 WIB</option>
-                                <option value="12:30" class="bg-gray-900">12:30 WIB</option>
-                                <option value="13:00" class="bg-gray-900">13:00 WIB</option>
-                                <option value="13:30" class="bg-gray-900">13:30 WIB</option>
-                                <option value="14:00" class="bg-gray-900">14:00 WIB</option>
-                                <option value="14:30" class="bg-gray-900">14:30 WIB</option>
-                                <option value="15:00" class="bg-gray-900">15:00 WIB</option>
-                                <option value="15:30" class="bg-gray-900">15:30 WIB</option>
-                                <option value="16:00" class="bg-gray-900">16:00 WIB</option>
-                                <option value="16:30" class="bg-gray-900">16:30 WIB</option>
-                                <option value="17:00" class="bg-gray-900">17:00 WIB</option>
-                                <option value="17:30" class="bg-gray-900">17:30 WIB</option>
-                                <option value="18:00" class="bg-gray-900">18:00 WIB</option>
-                                <option value="18:30" class="bg-gray-900">18:30 WIB</option>
-                                <option value="19:00" class="bg-gray-900">19:00 WIB</option>
-                                <option value="19:30" class="bg-gray-900">19:30 WIB</option>
-                                <option value="20:00" class="bg-gray-900">20:00 WIB</option>
-                                <option value="20:30" class="bg-gray-900">20:30 WIB</option>
-                                <option value="21:00" class="bg-gray-900">21:00 WIB</option>
+                                <template x-for="time in listJamMulai" :key="time">
+                                    <option :value="time" 
+                                            :disabled="isJamPast(time)" 
+                                            :class="isJamPast(time) ? 'text-gray-600 bg-gray-900' : 'text-white bg-gray-900'"
+                                            x-text="time + ' WIB' + (isJamPast(time) ? ' (Lewat)' : '')">
+                                    </option>
+                                </template>
                             </select>
                         </div>
 
-                        <!-- JAM SELESAI (TERKUNCI TERLEBIH DAHULU MENGGUNAKAN Alpine.js) -->
+                        <!-- JAM SELESAI -->
                         <div>
                             <label for="jam_selesai" class="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-2">
                                 Jam Selesai
